@@ -1,0 +1,27 @@
+<button type="button" class="btn btn-primary" (click)="showMoivesFunction()">Movies</button>
+<button type="button" class="btn btn-primary">Tv Series</button>
+<div *ngIf="moviesButton==1">
+    <button type="button" class="btn btn-primary" (click)="addMovies()">Add Movies</button>
+    <button type="button" class="btn btn-primary" (click)="showMovies()">Show Movies</button>
+    <button type="button" class="btn btn-primary" (click)="deleteMovies()">Delete Movies</button>
+    <button type="button" class="btn btn-primary" (click)="updateMovies()">Update Movie Name</button>
+</div>
+<div *ngIf="addMovieFlag==1">
+    <form>
+        <div class="form-group">
+          <label>Movie Name </label>
+          <input type="text" required class="form-control"  [(ngModel)]="movie.name" name="moviename" ngModel>
+        </div>
+        <div class="form-group">
+            <label>Movie Catagery </label>
+            <input type="text" required class="form-control"  [(ngModel)]="movie.catagery" name="moviecatagery" ngModel>
+          </div>
+          <div class="form-group">
+            <label>Movie Path </label>
+            <input type="text" required class="form-control"  [(ngModel)]="movie.path" name="moviepath" ngModel>
+          </div>
+    
+        <button type="submit" class="btn btn-success" (click)="addMovieToDB()">Submit</button>
+    
+      </form>
+</div>
