@@ -1,27 +1,130 @@
+<app-catagery></app-catagery>
 <button type="button" class="btn btn-primary" (click)="showMoivesFunction()">Movies</button>
 <button type="button" class="btn btn-primary">Tv Series</button>
+<input type="text" name="search" [(ngModel)]="search" (keyup.enter)="searchMovies()" placeholder="Search..">
 <div *ngIf="moviesButton==1">
-    <button type="button" class="btn btn-primary" (click)="addMovies()">Add Movies</button>
-    <button type="button" class="btn btn-primary" (click)="showMovies()">Show Movies</button>
-    <button type="button" class="btn btn-primary" (click)="deleteMovies()">Delete Movies</button>
-    <button type="button" class="btn btn-primary" (click)="updateMovies()">Update Movie Name</button>
+  <button type="button" class="btn btn-primary" (click)="addMovies()">Add Movies</button>
+  <button type="button" class="btn btn-primary" (click)="showMovies()">Show Movies</button>
+
 </div>
+
+
+<!-- For adding movies -->
 <div *ngIf="addMovieFlag==1">
-    <form>
-        <div class="form-group">
-          <label>Movie Name </label>
-          <input type="text" required class="form-control"  [(ngModel)]="movie.name" name="moviename" ngModel>
-        </div>
-        <div class="form-group">
-            <label>Movie Catagery </label>
-            <input type="text" required class="form-control"  [(ngModel)]="movie.catagery" name="moviecatagery" ngModel>
-          </div>
-          <div class="form-group">
-            <label>Movie Path </label>
-            <input type="text" required class="form-control"  [(ngModel)]="movie.path" name="moviepath" ngModel>
-          </div>
-    
-        <button type="submit" class="btn btn-success" (click)="addMovieToDB()">Submit</button>
-    
-      </form>
+  <form>
+    <div class="form-group">
+      <label>Movie Name </label>
+      <input type="text" required class="form-control" [(ngModel)]="movie.name" name="moviename" ngModel>
+    </div>
+    <div class="form-group">
+      <label>Movie Catagery </label>
+      <input type="text" required class="form-control" [(ngModel)]="movie.catagery" name="moviecatagery" ngModel>
+    </div>
+    <div class="form-group">
+      <label>Movie Path </label>
+      <input type="text" required class="form-control" [(ngModel)]="movie.path" name="moviepath" ngModel>
+    </div>
+
+    <button type="submit" class="btn btn-success" (click)="addMovieToDB()">Submit</button>
+
+  </form>
 </div>
+
+
+<!-- For showing movies -->
+<div *ngIf="showMoviesFlag==1">
+  <div class="container">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Movie Name</th>
+          <th>Catagery</th>
+        </tr>
+      </thead>
+      <tbody *ngFor='let movie of movies'>
+        <tr (click)="showMovieImage(movie)">
+          <td></td>
+          <td>{{movie.name}}</td>
+          <td>{{movie.catagery}}</td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+
+
+
+</div>
+
+<!--For showing selected movie image and updating -->
+<div *ngIf="showMovieImageFlag==1">
+  <img src={{select.image}}>
+  <h3>{{select.name}}</h3>
+  <h4>Catagery:{{select.catagery}}</h4>
+  <button type="button" class="btn btn-primary" (click)="updateMoviesFlag()">Update Movie Name</button>
+  <button type="button" class="btn btn-primary" (click)="deleteMovies()">Delete Movies</button>
+
+  <div *ngIf="updateMovieFlag==1">
+    <form>
+      <div class="form-group">
+        <label> Enter New Movie Name </label>
+        <input type="text" required class="form-control" [(ngModel)]="updateMovie.newName" name="newName" ngModel>
+      </div>
+      <button type="submit" class="btn btn-success" (click)="updateMovies()">Change</button>
+    </form>
+  </div>
+</div>
+
+<!-- For adding Series -->
+<div *ngIf="addSeriesFlag==1">
+  <form>
+    <div class="form-group">
+      <label>Id </label>
+      <input type="text" required class="form-control" [(ngModel)]="series.id" name="seriesid" ngModel>
+    </div>
+    <div class="form-group">
+      <label>Name </label>
+      <input type="text" required class="form-control" [(ngModel)]="series.name" name="seriesname" ngModel>
+    </div>
+    <div class="form-group">
+      <label>Catagery</label>
+      <input type="text" required class="form-control" [(ngModel)]="series.catagery" name="seriescatagery" ngModel>
+    </div>
+
+    <button type="submit" class="btn btn-success" (click)="addSeasonNext()">Next</button>
+
+  </form>
+
+</div>
+
+
+<div *ngIf="addSeasonFlag==1">
+  <form>
+    <div class="form-group">
+      <label> Season Name </label>
+      <input type="text" required class="form-control" [(ngModel)]=" season_name" name="seasonname" ngModel>
+    </div>
+    <button type="submit" class="btn btn-success" (click)="addSeasonNext()">Next</button>
+
+  </form>
+  
+
+</div>
+<div *ngIf="addEposideFlag==1">
+    <form>
+      <div class="form-group">
+        <label> Eposide Name </label>
+        <input type="text" required class="form-control" [(ngModel)]=" episode_name" name="eposidename" ngModel>
+      </div>
+      <div class="form-group">
+          <label> Eposide Path  </label>
+          <input type="text" required class="form-control" [(ngModel)]=" episode" name="eposide" ngModel>
+        </div>
+      <button type="submit" class="btn btn-success" (click)="addNewSeries()">Save</button>
+  
+    </form>
+    
+  
+  </div>

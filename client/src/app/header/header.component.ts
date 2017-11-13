@@ -44,8 +44,8 @@ export class HeaderComponent implements OnInit {
                 this.router.navigate(['/admin']);
               }
               else if (res.role == 2) {
-                //this.router.navigate(['/user']);
-                alert("user loguin")
+                this.router.navigate(['/user']);
+              
               }
               else if(res.role == 0){
                 alert("Verify Your Email");

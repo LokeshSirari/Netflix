@@ -1,0 +1,43 @@
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" (click)="reset()">Catagery</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li><a (click)="getCatagery('Comedy')">Comedy</a></li>
+      <li><a (click)="getCatagery('Action')">Action</a></li>
+      <li><a (click)="getCatagery('Drama')">Drama</a></li>
+      <li><a (click)="getCatagery('Animated')">Animated</a></li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+        <li><a (click)="logout()"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+        </ul>
+  </div>
+</nav>
+<div *ngIf="showMoviesFlag==1">
+  <div class="container">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Movie Name</th>
+          <th>Catagery</th>
+        </tr>
+      </thead>
+      <tbody *ngFor='let movie of movies'>
+        <tr (click)="showMovieImage(movie)">
+          <td></td>
+          <td>{{movie.name}}</td>
+          <td>{{movie.catagery}}</td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+</div>
+<div *ngIf="showMovieImageFlag==1">
+
+  <img src={{select.image}}>
+  <h3>{{select.name}}</h3>
+  <h4>Catagery:{{select.catagery}}</h4>
+</div>

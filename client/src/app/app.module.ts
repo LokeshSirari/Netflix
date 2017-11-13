@@ -11,13 +11,17 @@ import { AuthGuard } from './app.auth-guard';
 import { HeaderComponent } from './header/header.component';
 import { VerificationComponent } from './verification/verification.component';
 import { AdminComponent } from './admin/admin.component';
+import { CatageryComponent } from './catagery/catagery.component';
+import { UserComponent } from './user/user.component';
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     HeaderComponent,
     VerificationComponent,
-    AdminComponent
+    AdminComponent,
+    CatageryComponent,
+    UserComponent
   ],
   imports: [
     BrowserModule,

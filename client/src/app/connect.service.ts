@@ -6,9 +6,10 @@ import 'rxjs/add/operator/map';
 export class ConnectService {
 
   constructor(public httpService: Http) { }
-  postUsers='http://localhost:2000/api/user';
-  postLoginUrl='http://localhost:2000/api/login';
-  postMovieUrl='http://localhost:2000/api/movies';
+  postUsers='http://192.168.12.201:2000/api/user';
+  postLoginUrl='http://192.168.12.201:2000/api/login';
+  postMovieUrl='http://192.168.12.201:2000/api/movies';
+  getMoviesUrl='http://192.168.12.201:2000/api/movies';
    //To save users data
    postUser(Data): Observable<any> {
     let headers = new Headers();
@@ -18,8 +19,7 @@ export class ConnectService {
       data => data.json());
   }
   emailVerification(code): Observable<any> { 
-    console.log("hello") 
-    return this.httpService.get('http://localhost:2000/api/'+code).map(
+    return this.httpService.get('http://192.168.12.201:2000/api/verify/'+code).map(
       (res: Response) => res.json());
   }
   postLogin(Data):Observable<any>{
@@ -36,7 +36,28 @@ export class ConnectService {
     return this.httpService.post(this.postMovieUrl, Data, options).map(
       data => data.json());
   }
-
-
+  getMovies(): Observable<any> {
+    return this.httpService.get(this.getMoviesUrl).map(
+      (res: Response) => res.json());
+  }
+updateMovie(Data):Observable<any>{
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json')
+    let options = new RequestOptions({ headers: headers });
+    return this.httpService.put('http://192.168.12.201:2000/api/movies/update/'+Data.name, Data, options).map(
+      data => data.json());
+  }
+  deleteMovie(movie): Observable<any> { 
+    return this.httpService.delete('http://192.168.12.201:2000/api/movies/update/'+movie).map(
+      (res: Response) => res.json());
+  }
+  searchMovies(movie): Observable<any> {
+    return this.httpService.get('http://192.168.12.201:2000/api/movies/update/'+movie).map(
+      (res: Response) => res.json());
+  }
+  searchMovieCatagery(catagery): Observable<any> {
+    return this.httpService.get('http://192.168.12.201:2000/api/movies/catagery/'+catagery).map(
+      (res: Response) => res.json());
+  }
 
 }
