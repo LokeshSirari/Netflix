@@ -26,7 +26,7 @@
           <span class="glyphicon glyphicon-user"></span> Signup</h4>
       </div>
       <div class="modal-body">
-        <form #userForm="ngForm" (ngSubmit)="onSubmit(userForm.value)" novalidate>
+        <form #userForm="ngForm" (ngSubmit)="signup(userForm.value)" novalidate>
           <div class="form-group">
             <label> Firstname </label>
             <input type="text" class="form-control" [(ngModel)]="userInput.firstname" #nameRef="ngModel" required placeholder="Enter Firstname"
@@ -75,7 +75,7 @@
             </div>
           </div>
 
-          <button [disabled]="!userForm.form.valid" type="submit" (click)="signup()" class="btn btn-block">Add User
+          <button [disabled]="!userForm.form.valid" type="submit"  class="btn btn-block">Add User
             <span class="glyphicon glyphicon-ok"></span>
           </button>
         </form>
@@ -102,7 +102,7 @@
           <span class="glyphicon glyphicon-user"></span> Login</h4>
       </div>
       <div class="modal-body">
-        <form #loginForm="ngForm" (ngSubmit)="onSubmit(userForm.value)" novalidate>
+        <form #loginForm="ngForm" (ngSubmit)="login(loginForm.value)" novalidate>
 
           <div class="form-group">
             <label>Email:</label>
@@ -116,17 +116,6 @@
             </div>
 
           </div>
-          <!-- <div class="form-group">
-                      <label> Email </label>
-                      <input type="text" class="form-control" #lastRef="ngModel" [(ngModel)]="userInput.email" required 
-                      pattern="^[\w]+(\.[\w]+)?@[a-zA-Z]{1,20}\.[a-zA-Z]{2,5}$" placeholder="Enter Email"
-                          name="email" ngModel>
-                      <div *ngIf="lastRef.errors && (lastRef.dirty||lastRef.touched)">
-                          <div [hidden]="!lastRef.errors.required">
-                              Please enter email
-                          </div>
-                      </div>
-                  </div> -->
           <div class="form-group">
             <label> Password</label>
             <input type="password" class="form-control" #loginrefPassword="ngModel" [(ngModel)]="loginInput.password" required placeholder="Enter Password"
@@ -141,7 +130,7 @@
             </div>
           </div>
 
-          <button [disabled]="!loginForm.form.valid" type="submit" (click)="login()" class="btn btn-block">Log In
+          <button [disabled]="!loginForm.form.valid" type="submit" class="btn btn-block">Log In
             <span class="glyphicon glyphicon-ok"></span>
           </button>
         </form>

@@ -17,14 +17,14 @@ export class HeaderComponent implements OnInit {
     password: "",
     lastname: "",
     role: 0,
-    email:"",
-    status:""
+    email: "",
+    status: ""
   };
   loginInput = {
-    empId: "",
+    email: "",
     password: ""
   };
-  signup() {
+  signup(data) {
     this.connectService.postUser(this.userInput).subscribe(res => {
       if (res.success == true) {
         alert("User Added Successfully");
@@ -32,24 +32,24 @@ export class HeaderComponent implements OnInit {
     });
   }
   flag = 0;
-  login() {
+  login(data) {
     this.connectService.postLogin(this.loginInput).subscribe(res => {
       console.log(res)
-      if(res.success==true){
-        this.flag=1;
-             localStorage.setItem("loginStatus", res.role);
-          
+      if (res.success == true) {
+        this.flag = 1;
+        localStorage.setItem("loginStatus", res.role);
+
         if (res.role == 1) {
           //alert("admin login");
-                this.router.navigate(['/admin']);
-              }
-              else if (res.role == 2) {
-                this.router.navigate(['/user']);
-              
-              }
-              else if(res.role == 0){
-                alert("Verify Your Email");
-              }
+          this.router.navigate(['/admin']);
+        }
+        else if (res.role == 2) {
+          this.router.navigate(['/user']);
+
+        }
+        else if (res.role == 0) {
+          alert("Verify Your Email");
+        }
 
       }
       if (this.flag == 0) {
@@ -60,4 +60,7 @@ export class HeaderComponent implements OnInit {
 
   }
 
+  onSubmit() {
+    console.log("called");
+  }
 }
