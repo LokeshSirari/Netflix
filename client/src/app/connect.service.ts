@@ -10,6 +10,12 @@ export class ConnectService {
   postLoginUrl='http://192.168.12.201:2000/api/login';
   postMovieUrl='http://192.168.12.201:2000/api/movies';
   getMoviesUrl='http://192.168.12.201:2000/api/movies';
+  emailVerificationUrl = 'http://192.168.12.201:2000/api/verify/';
+  updateMoviesUrl = 'http://192.168.12.201:2000/api/movies/update/';
+  deleteMoviesUrl = 'http://192.168.12.201:2000/api/movies/update/';
+  searchMoviesUrl = 'http://192.168.12.201:2000/api/movies/update/';
+  searchMoviesByCatageryUrl = 'http://192.168.12.201:2000/api/movies/catagery/';
+  postNewSeriesUrl = 'http://192.168.12.201:2000/api/series';
    //To save users data
    postUser(Data): Observable<any> {
     let headers = new Headers();
@@ -19,7 +25,7 @@ export class ConnectService {
       data => data.json());
   }
   emailVerification(code): Observable<any> { 
-    return this.httpService.get('http://192.168.12.201:2000/api/verify/'+code).map(
+    return this.httpService.get(this.emailVerificationUrl+code).map(
       (res: Response) => res.json());
   }
   postLogin(Data):Observable<any>{
@@ -44,20 +50,28 @@ updateMovie(Data):Observable<any>{
     let headers = new Headers();
     headers.append('Content-Type', 'application/json')
     let options = new RequestOptions({ headers: headers });
-    return this.httpService.put('http://192.168.12.201:2000/api/movies/update/'+Data.name, Data, options).map(
+    return this.httpService.put(this.updateMoviesUrl+Data.name, Data, options).map(
       data => data.json());
   }
   deleteMovie(movie): Observable<any> { 
-    return this.httpService.delete('http://192.168.12.201:2000/api/movies/update/'+movie).map(
+    return this.httpService.delete(this.deleteMoviesUrl+movie).map(
       (res: Response) => res.json());
   }
   searchMovies(movie): Observable<any> {
-    return this.httpService.get('http://192.168.12.201:2000/api/movies/update/'+movie).map(
+    return this.httpService.get(this.searchMoviesUrl+movie).map(
       (res: Response) => res.json());
   }
   searchMovieCatagery(catagery): Observable<any> {
-    return this.httpService.get('http://192.168.12.201:2000/api/movies/catagery/'+catagery).map(
+    return this.httpService.get(this.searchMoviesByCatageryUrl+catagery).map(
       (res: Response) => res.json());
   }
+  postNewSeries(Data):Observable<any>{
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json')
+    let options = new RequestOptions({ headers: headers });
+    return this.httpService.post(this.postNewSeriesUrl, Data, options).map(
+      data => data.json());
+  }
+
 
 }

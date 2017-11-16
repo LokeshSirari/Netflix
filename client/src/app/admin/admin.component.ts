@@ -137,20 +137,44 @@ export class AdminComponent implements OnInit {
   //Tv Series Functions and Variables
   //
 
-  series = {
+  newSeries = {
     id: "",
     catagery: "",
-    name: ""
+    name: "",
+    season_name:"",
+    episode_name:"",
+    episode:""
   };
   addSeriesFlag=0;
   addSeasonFlag=0;
   addEposideFlag=0;
   addSeries(){
-    this.addSeriesFlag=0;
+    this.addSeriesFlag=1;
+    this.addSeasonFlag=0;
+    this.addEposideFlag=0;
   }
   addSeasonNext(){
-   this.addSeriesFlag=0;
-   this.addSeasonFlag=1;
+    this.addSeriesFlag=0;
+    this.addSeasonFlag=1;
+    this.addEposideFlag=0;
+  }
+  addEpisodeNext(){
+    this.addSeriesFlag=0;
+    this.addSeasonFlag=0;
+    this.addEposideFlag=1;
+  }
+  addNewSeries(){
+    this.addSeriesFlag=0;
+    this.addSeasonFlag=0;
+    this.addEposideFlag=0;
+    this.connectService.postNewSeries(this.newSeries).subscribe(res => {
+      if (res.success == true) {
+        alert("Movie Added Successfully");
+      }
+      else {
+        alert(res);
+      }
+    });
   }
 
 

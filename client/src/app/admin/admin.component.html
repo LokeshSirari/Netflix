@@ -1,6 +1,6 @@
 <app-catagery></app-catagery>
 <button type="button" class="btn btn-primary" (click)="showMoivesFunction()">Movies</button>
-<button type="button" class="btn btn-primary">Tv Series</button>
+<button type="button" class="btn btn-primary"(click)="addSeries()">Tv Series</button>
 <input type="text" name="search" [(ngModel)]="search" (keyup.enter)="searchMovies()" placeholder="Search..">
 <div *ngIf="moviesButton==1">
   <button type="button" class="btn btn-primary" (click)="addMovies()">Add Movies</button>
@@ -82,15 +82,15 @@
   <form>
     <div class="form-group">
       <label>Id </label>
-      <input type="text" required class="form-control" [(ngModel)]="series.id" name="seriesid" ngModel>
+      <input type="text" required class="form-control" [(ngModel)]="newSeries.id" name="seriesid" ngModel>
     </div>
     <div class="form-group">
       <label>Name </label>
-      <input type="text" required class="form-control" [(ngModel)]="series.name" name="seriesname" ngModel>
+      <input type="text" required class="form-control" [(ngModel)]="newSeries.name" name="seriesname" ngModel>
     </div>
     <div class="form-group">
       <label>Catagery</label>
-      <input type="text" required class="form-control" [(ngModel)]="series.catagery" name="seriescatagery" ngModel>
+      <input type="text" required class="form-control" [(ngModel)]="newSeries.catagery" name="seriescatagery" ngModel>
     </div>
 
     <button type="submit" class="btn btn-success" (click)="addSeasonNext()">Next</button>
@@ -104,9 +104,9 @@
   <form>
     <div class="form-group">
       <label> Season Name </label>
-      <input type="text" required class="form-control" [(ngModel)]=" season_name" name="seasonname" ngModel>
+      <input type="text" required class="form-control" [(ngModel)]=" newSeries.season_name" name="seasonname" ngModel>
     </div>
-    <button type="submit" class="btn btn-success" (click)="addSeasonNext()">Next</button>
+    <button type="submit" class="btn btn-success" (click)="addEpisodeNext()">Next</button>
 
   </form>
   
@@ -116,11 +116,11 @@
     <form>
       <div class="form-group">
         <label> Eposide Name </label>
-        <input type="text" required class="form-control" [(ngModel)]=" episode_name" name="eposidename" ngModel>
+        <input type="text" required class="form-control" [(ngModel)]=" newSeries.episode_name" name="eposidename" ngModel>
       </div>
       <div class="form-group">
           <label> Eposide Path  </label>
-          <input type="text" required class="form-control" [(ngModel)]=" episode" name="eposide" ngModel>
+          <input type="text" required class="form-control" [(ngModel)]=" newSeries.episode" name="eposide" ngModel>
         </div>
       <button type="submit" class="btn btn-success" (click)="addNewSeries()">Save</button>
   

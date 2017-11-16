@@ -33,21 +33,23 @@ export class HeaderComponent implements OnInit {
   }
   flag = 0;
   login(data) {
+    console.log("hello")
     this.connectService.postLogin(this.loginInput).subscribe(res => {
       console.log(res)
       if (res.success == true) {
         this.flag = 1;
-        localStorage.setItem("loginStatus", res.role);
+        console.log(res.body.token);
+        localStorage.setItem("loginStatus", res.body.role);
 
-        if (res.role == 1) {
+        if (res.body.role == 1) {
           //alert("admin login");
           this.router.navigate(['/admin']);
         }
-        else if (res.role == 2) {
+        else if (res.body.role == 2) {
           this.router.navigate(['/user']);
 
         }
-        else if (res.role == 0) {
+        else if (res.body.role == 0) {
           alert("Verify Your Email");
         }
 

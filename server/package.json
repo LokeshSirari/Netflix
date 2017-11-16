@@ -19,6 +19,7 @@
   "dependencies": {
     "base64-img": "^1.0.3",
     "express": "^4.16.2",
+    "jsonwebtoken": "^8.1.0",
     "md5": "^2.2.1",
     "mongoose": "^4.13.1",
     "nodemailer": "^4.4.0"

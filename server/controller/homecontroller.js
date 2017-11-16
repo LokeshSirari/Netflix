@@ -1,9 +1,16 @@
 var User = require('../models/users');
 var Movies = require('../models/movies');
+var Series = require('../models/series');
+var Seasons = require('../models/seasons');
+var Series = require('../models/series');
+var Episodes = require('../models/episodes');
+var PasswordAlgo = require('../PasswordAlgo/passwordalgo');
+var JsonResponse = require('../JsonResponse/jsonResponse');
 var Promise = require("bluebird");
 var md5 = require('md5');
 var nodemailer = require('nodemailer');
 var base64Img = require('base64-img');
+var jwt = require('jsonwebtoken');
 var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -17,14 +24,16 @@ exports.updateUser = function (req, res) {
     console.log(status);
     User.findOne({ status: status }, function (err, user) {
         if (err) {
-            res.json(err);
+            JsonResponse.jsonSuccessFalseResponse(err,res);
+            //res.json(err);
         }
         else if (user == null) {
-            res.json(
-                {
-                    success: false
-                }
-            )
+            JsonResponse.jsonSuccessFalseResponse(user,res);
+            // res.json(
+            //     {
+            //         success: false
+            //     }
+            // )
         }
         else {
 
@@ -36,10 +45,11 @@ exports.updateUser = function (req, res) {
                     res.json(err);
                 }
 
-                res.json({
-                    success: true,
-                    body: response
-                });
+                JsonResponse.jsonSuccessTrueResponse(response,res);
+                // res.json({
+                //     success: true,
+                //     body: response
+                // });
             })
         }
     })
@@ -48,7 +58,7 @@ exports.updateUser = function (req, res) {
 exports.getUser = function (req, res) {
     User.find({}, function (err, response) {
         if (err) {
-            return res.json(req, res, err);
+            JsonResponse.jsonSuccessFalseResponse(error,res);
         }
 
         res.json(response);
@@ -57,23 +67,25 @@ exports.getUser = function (req, res) {
 exports.postLogin = function (req, res) {
     var password = req.body.password;
     var email = req.body.email;
-    console.log(email + password);
-    password = md5(password);
+    password = PasswordAlgo.passwordAlgo(password)
     User.findOne({ email: email, password: password }, function (error, response) {
         if (error) {
             //console.log(err)
-            res.json(error);
+            JsonResponse.jsonSuccessFalseResponse(error,res);
+            //res.json(error);
         }
         else if (response != null) {
-            res.json({
-                success: true,
-                role: response.role,
-            })
+            var token = jwt.sign({ email: response.email }, 'secretId');
+            var data={
+                token:token,
+                role:response.role
+            };
+           JsonResponse.jsonSuccessTrueResponse(data,res);
+       
         }
         else {
-            res.json({
-                success: false
-            })
+          
+            JsonResponse.jsonSuccessFalseResponse(response,res);
         }
 
     });
@@ -93,15 +105,16 @@ exports.postUser = function (req, res) {
     if (user.status != "verified") {
         user.status = md5(user.email);
     }
-    user.password = md5(user.password);
+    user.password = PasswordAlgo.passwordAlgo(user.password)
 
     user.save(function (err, response) {
         if (err) {
             //console.log(err)
-            res.json({
-                success: false,
-                error: err
-            });
+            // res.json({
+            //     success: false,
+            //     error: err
+            // });
+            JsonResponse.jsonSuccessFalseResponse(err,res);
         }
         else {
             //put this in else if you dont want to send email to admin
@@ -121,10 +134,11 @@ exports.postUser = function (req, res) {
                 }
             });
             console.log(response);
-            res.json({
-                success: true,
-                body: response
-            })
+            // res.json({
+            //     success: true,
+            //     body: response
+            // })
+            JsonResponse.jsonSuccessTrueResponse(response,res);
         }
     })
 }
@@ -139,24 +153,25 @@ exports.postMovies = function (req, res) {
     // movies.image = base64Img.base64Sync(movies.image);
     movies.save(function (error, response) {
         if (error) {
-            res.json({
-                "success": false,
-                "error": error
-            })
-
+            // res.json({
+            //     "success": false,
+            //     "error": error
+            // })
+            JsonResponse.jsonSuccessFalseResponse(error,res);
         }
         else {
-            res.json({
-                "success": true,
-                "body": response
-            })
+            // res.json({
+            //     "success": true,
+            //     "body": response
+            // })
+            JsonResponse.jsonSuccessTrueResponse(response,res);
         }
     });
 }
 exports.getMovies = function (req, res) {
     Movies.find({}, function (err, response) {
         if (err) {
-            return res.json(req, res, err);
+            JsonResponse.jsonSuccessFalseResponse(error,res);
         }
 
         // if(response.length!=0){
@@ -180,17 +195,16 @@ exports.updateMovies = function (req, res) {
 
             movies.save(function (err, response) {
                 if (err) {
-                    res.json(err);
+                   // res.json(err);
+                   JsonResponse.jsonSuccessFalseResponse(err,res);
                 }
 
-                res.json(response);
+                //res.json(response);
+                JsonResponse.jsonSuccessTrueResponse(response,res);
             });
         }
         else {
-            res.json({
-                success: false,
-                message: "no movie found"
-            })
+            JsonResponse.jsonSuccessFalseResponse(movies);
         }
     })
 }
@@ -198,24 +212,18 @@ exports.deleteMovies = function (req, res) {
     var name = req.params.name;
     Movies.findOne({ name: name }, function (err, movies) {
         if (err) {
-            res.json(err);
+            JsonResponse.jsonSuccessFalseResponse(err,res);
         }
 
         if (movies) {
             Movies.remove({ name: name }, function (err) {
                 if (err) {
-                    res.json(err);
+                    JsonResponse.jsonSuccessFalseResponse(err,res);
                 }
-
-                res.json({
-                    success: true
-                });
+                JsonResponse.jsonSuccessTrueResponse(movies,res);
             })
         } else {
-            res.json({
-                success: false,
-                message: "Movie doesnt exist"
-            });
+            JsonResponse.jsonSuccessFalseResponse(movies,res);
         }
 
     })
@@ -224,7 +232,8 @@ exports.searchMovies = function (req, res) {
     var name = req.params.name;
     Movies.find({ name: name }, function (err, movies) {
         if (err) {
-            res.json(err);
+            //res.json(err);
+            JsonResponse.jsonSuccessFalseResponse(err,res);
         }
         if (movies) {
             res.json(movies);
@@ -256,10 +265,7 @@ exports.newSeriesAdd = function (req, res) {
     });
     series.save(function (error, response) {
         if (error) {
-            res.json({
-                "success": false,
-                "error": error
-            })
+            JsonResponse.jsonSuccessFalseResponse(error,res);
 
         }
         else {
@@ -270,10 +276,7 @@ exports.newSeriesAdd = function (req, res) {
             });
             seasons.save(function (error1, response1) {
                 if (error1) {
-                    res.json({
-                        "success": false,
-                        "error": error1
-                    })
+                    JsonResponse.jsonSuccessFalseResponse(error1,res);
 
                 }
                 else {
@@ -286,17 +289,11 @@ exports.newSeriesAdd = function (req, res) {
                     });
                     episodes.save(function (error2, response2) {
                         if (error2) {
-                            res.json({
-                                "success": false,
-                                "error": error2
-                            })
+                            JsonResponse.jsonSuccessFalseResponse(error2,res);
 
                         }
                         else {
-                            res.json({
-                                "success": true,
-                                "body": response1
-                            })
+                            JsonResponse.jsonSuccessTrueResponse(response1,res);
                         }
                     });
                 }
@@ -313,34 +310,22 @@ exports.seasonAdd = function (req, res) {
     });
     Season.findOne({ season_name: seasons.season_name, series_id: seasons.series_id }, function (err, response) {
         if (err) {
-            res.json({
-                status: "false",
-                data: "server error"
-            })
+            JsonResponse.jsonSuccessFalseResponse(err,res);
         }
         else if (response == null) {
             season.save(function (error, response1) {
                 if (error) {
-                    res.json({
-                        "success": false,
-                        "error": error
-                    })
+                    JsonResponse.jsonSuccessFalseResponse(error,res);
 
                 }
                 else {
-                    res.json({
-                        "success": true,
-                        "body": response1
-                    })
+                    JsonResponse.jsonSuccessTrueResponse(response1,res);
                 }
             });
 
         }
         else {
-            res.json({
-                success: false,
-                body: "Season Already exist"
-            })
+            JsonResponse.jsonSuccessFalseResponse("season already exists",res)
         }
 
     });
@@ -356,34 +341,22 @@ exports.episodesAdd = function (req, res) {
     });
     Episodes.findOne({ season_name: episodes.season_name, series_id: episodes.series_id, episode_name: episodes.episode_name }, function (err, response) {
         if (err) {
-            res.json({
-                status: "false",
-                data: "server error"
-            })
+            JsonResponse.jsonSuccessFalseResponse(err,res);
         }
         else if (response == null) {
             episodes.save(function (error, response1) {
                 if (error) {
-                    res.json({
-                        "success": false,
-                        "error": error
-                    })
+                    JsonResponse.jsonSuccessFalseResponse(error,res);
 
                 }
                 else {
-                    res.json({
-                        "success": true,
-                        "body": response1
-                    })
+                    JsonResponse.jsonSuccessTrueResponse(response1,res);
                 }
             });
 
         }
         else {
-            res.json({
-                success: false,
-                body: "Episodes Already exist"
-            })
+            JsonResponse.jsonSuccessFalseResponse("Episode Already Exist",res);
         }
 
     });
@@ -393,7 +366,7 @@ exports.episodesAdd = function (req, res) {
 exports.getSeries = function (req, res) {
     Series.find({}, function (err, response) {
         if (err) {
-            return res.json(req, res, err);
+            JsonResponse.jsonSuccessFalseResponse(err,res);
         }
         res.json(response);
     })
@@ -402,7 +375,7 @@ exports.getSeason = function (req, res) {
     var series_id = req.params.season;
     Seasons.find({series_id:series_id}, function (err, response) {
         if (err) {
-            return res.json(req, res, err);
+            JsonResponse.jsonSuccessFalseResponse(err,res);
         }
         res.json(response);
     })
@@ -412,7 +385,7 @@ exports.getEpisode = function (req, res) {
     var season_name = req.params.season_name;
     Episodes.find({series_id:series_id,season_name:season_name}, function (err, response) {
         if (err) {
-            return res.json(req, res, err);
+            JsonResponse.jsonSuccessFalseResponse(err,res);
         }
         res.json(response);
     })
