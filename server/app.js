@@ -2,7 +2,8 @@
 var express = require('express');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
-
+var jwt = require('jsonwebtoken');
+var expressJWT = require('express-jwt');
 // Connect to the MongoDB
 mongoose.connect('mongodb://localhost:27017/netflix');
 
@@ -25,12 +26,12 @@ app.use(function (req, res, next) {    // Website you wish to allow to connect
     next();
   });
 app.use(bodyParser.json());
-
 routes = require('./routes/route')
+
+
+
 app.use('/api', routes);
-
-
-
+app.use(expressJWT({secret:'void'}).unless({path:['/api/v1/login','/api/v1/user']}));
 
 
 // Use environment defined port or 3000

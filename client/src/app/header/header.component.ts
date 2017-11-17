@@ -40,7 +40,7 @@ export class HeaderComponent implements OnInit {
         this.flag = 1;
         console.log(res.body.token);
         localStorage.setItem("loginStatus", res.body.role);
-
+        localStorage.setItem("token", res.body.token);
         if (res.body.role == 1) {
           //alert("admin login");
           this.router.navigate(['/admin']);
@@ -60,9 +60,5 @@ export class HeaderComponent implements OnInit {
 
     })
 
-  }
-
-  onSubmit() {
-    console.log("called");
   }
 }

@@ -16,6 +16,7 @@ export class ConnectService {
   searchMoviesUrl = 'http://192.168.12.201:2000/api/movies/update/';
   searchMoviesByCatageryUrl = 'http://192.168.12.201:2000/api/movies/catagery/';
   postNewSeriesUrl = 'http://192.168.12.201:2000/api/series';
+  
    //To save users data
    postUser(Data): Observable<any> {
     let headers = new Headers();
@@ -36,38 +37,50 @@ export class ConnectService {
       data => data.json());
   }
   postMovie(Data):Observable<any>{
-    let headers = new Headers();
-    headers.append('Content-Type', 'application/json')
+    var token = localStorage.getItem("token")
+    let headers = new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token });
     let options = new RequestOptions({ headers: headers });
     return this.httpService.post(this.postMovieUrl, Data, options).map(
       data => data.json());
   }
   getMovies(): Observable<any> {
-    return this.httpService.get(this.getMoviesUrl).map(
+    var token = localStorage.getItem("token")
+    let headers = new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token });
+    let options = new RequestOptions({ headers: headers });
+    return this.httpService.get(this.getMoviesUrl,options).map(
       (res: Response) => res.json());
   }
 updateMovie(Data):Observable<any>{
-    let headers = new Headers();
-    headers.append('Content-Type', 'application/json')
+  var token = localStorage.getItem("token")
+  let headers = new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token });
     let options = new RequestOptions({ headers: headers });
     return this.httpService.put(this.updateMoviesUrl+Data.name, Data, options).map(
       data => data.json());
   }
   deleteMovie(movie): Observable<any> { 
-    return this.httpService.delete(this.deleteMoviesUrl+movie).map(
+    var token = localStorage.getItem("token")
+    let headers = new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token });
+    let options = new RequestOptions({ headers: headers });
+    return this.httpService.delete(this.deleteMoviesUrl+movie,options).map(
       (res: Response) => res.json());
   }
   searchMovies(movie): Observable<any> {
-    return this.httpService.get(this.searchMoviesUrl+movie).map(
+    var token = localStorage.getItem("token")
+    let headers = new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token });
+    let options = new RequestOptions({ headers: headers });
+    return this.httpService.get(this.searchMoviesUrl+movie,options).map(
       (res: Response) => res.json());
   }
   searchMovieCatagery(catagery): Observable<any> {
-    return this.httpService.get(this.searchMoviesByCatageryUrl+catagery).map(
+    var token = localStorage.getItem("token")
+    let headers = new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token });
+    let options = new RequestOptions({ headers: headers });
+    return this.httpService.get(this.searchMoviesByCatageryUrl+catagery,options).map(
       (res: Response) => res.json());
   }
   postNewSeries(Data):Observable<any>{
-    let headers = new Headers();
-    headers.append('Content-Type', 'application/json')
+    var token = localStorage.getItem("token")
+    let headers = new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token });
     let options = new RequestOptions({ headers: headers });
     return this.httpService.post(this.postNewSeriesUrl, Data, options).map(
       data => data.json());
