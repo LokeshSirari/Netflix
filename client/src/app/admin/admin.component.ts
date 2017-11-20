@@ -12,21 +12,52 @@ export class AdminComponent implements OnInit {
 
   ngOnInit() {
   }
-  search:any;
+  //Base64 encoder
+  private base64textString = "";
+
+  handleFileSelect(evt) {
+    var files = evt.target.files;
+    var file = files[0];
+
+    if (files && file) {
+      var reader = new FileReader();
+
+      reader.onload = this._handleReaderLoaded.bind(this);
+
+      reader.readAsBinaryString(file);
+      
+      console.log(file.name)
+
+      // var hey = file.name.substring(1,file.name.indexOf("."));
+      var str = file.name.split('.');
+      this.movie.extension=str[1];
+    }
+  }
+
+  _handleReaderLoaded(readerEvt) {
+    var binaryString = readerEvt.target.result;
+    this.base64textString = btoa(binaryString);
+    this.movie.path = this.base64textString;
+    // console.log(btoa(binaryString));
+  }
+
+
+
+  search: any;
   moviesButton = 0;
   addMovieFlag = 0;
   showMovieFlag = 0;
-  searchMovies(){
+  searchMovies() {
     this.connectService.searchMovies(this.search).subscribe(res => {
       console.log(this.search)
       console.log(res);
       this.showMovieImageFlag = 0;
       this.addMovieFlag = 0;
       this.showMovieFlag = 0;
-            this.showMoviesFlag = 1;
-            this.movies = res;
-      
-          });
+      this.showMoviesFlag = 1;
+      this.movies = res;
+
+    });
   }
   showMoivesFunction() {
     this.showMoviesFlag = 0;
@@ -54,7 +85,8 @@ export class AdminComponent implements OnInit {
   movie = {
     name: "",
     catagery: "",
-    path: ""
+    path: "",
+    extension:""
   };
   addMovieToDB() {
     this.connectService.postMovie(this.movie).subscribe(res => {
@@ -74,11 +106,11 @@ export class AdminComponent implements OnInit {
   showMovies() {
     this.showMovieImageFlag = 0;
     this.addMovieFlag = 0;
-    if(this.showMoviesFlag==0){
-      this.showMoviesFlag=1;
+    if (this.showMoviesFlag == 0) {
+      this.showMoviesFlag = 1;
     }
-    else{
-      this.showMoviesFlag=0;
+    else {
+      this.showMoviesFlag = 0;
     }
 
     this.connectService.getMovies().subscribe(res => {
@@ -108,12 +140,12 @@ export class AdminComponent implements OnInit {
     }
 
   }
-  updateMovies(){
-    this.updateMovie.name=this.select.name;
+  updateMovies() {
+    this.updateMovie.name = this.select.name;
     this.connectService.updateMovie(this.updateMovie).subscribe(res => {
       if (res.success != false) {
         this.addMovieFlag = 0;
-        this.updateMovieFlag=0;
+        this.updateMovieFlag = 0;
         alert("Movie Updated Successfully");
       }
       else {
@@ -121,11 +153,11 @@ export class AdminComponent implements OnInit {
       }
     });
   }
-  deleteMovies(){
+  deleteMovies() {
     this.connectService.deleteMovie(this.select.name).subscribe(res => {
       if (res.success != false) {
         this.addMovieFlag = 0;
-        this.updateMovieFlag=0;
+        this.updateMovieFlag = 0;
         alert("Movie Deleted Successfully");
       }
       else {
@@ -141,32 +173,32 @@ export class AdminComponent implements OnInit {
     id: "",
     catagery: "",
     name: "",
-    season_name:"",
-    episode_name:"",
-    episode:""
+    season_name: "",
+    episode_name: "",
+    episode: ""
   };
-  addSeriesFlag=0;
-  addSeasonFlag=0;
-  addEposideFlag=0;
-  addSeries(){
-    this.addSeriesFlag=1;
-    this.addSeasonFlag=0;
-    this.addEposideFlag=0;
+  addSeriesFlag = 0;
+  addSeasonFlag = 0;
+  addEposideFlag = 0;
+  addSeries() {
+    this.addSeriesFlag = 1;
+    this.addSeasonFlag = 0;
+    this.addEposideFlag = 0;
   }
-  addSeasonNext(){
-    this.addSeriesFlag=0;
-    this.addSeasonFlag=1;
-    this.addEposideFlag=0;
+  addSeasonNext() {
+    this.addSeriesFlag = 0;
+    this.addSeasonFlag = 1;
+    this.addEposideFlag = 0;
   }
-  addEpisodeNext(){
-    this.addSeriesFlag=0;
-    this.addSeasonFlag=0;
-    this.addEposideFlag=1;
+  addEpisodeNext() {
+    this.addSeriesFlag = 0;
+    this.addSeasonFlag = 0;
+    this.addEposideFlag = 1;
   }
-  addNewSeries(){
-    this.addSeriesFlag=0;
-    this.addSeasonFlag=0;
-    this.addEposideFlag=0;
+  addNewSeries() {
+    this.addSeriesFlag = 0;
+    this.addSeasonFlag = 0;
+    this.addEposideFlag = 0;
     this.connectService.postNewSeries(this.newSeries).subscribe(res => {
       if (res.success == true) {
         alert("Movie Added Successfully");

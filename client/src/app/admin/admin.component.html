@@ -21,8 +21,9 @@
       <input type="text" required class="form-control" [(ngModel)]="movie.catagery" name="moviecatagery" ngModel>
     </div>
     <div class="form-group">
-      <label>Movie Path </label>
-      <input type="text" required class="form-control" [(ngModel)]="movie.path" name="moviepath" ngModel>
+      <label>Select Movie </label>
+      <input type="file" id="filePicker" (change)="handleFileSelect($event)">
+      <!-- <input type="text" required class="form-control" [(ngModel)]="movie.path" name="moviepath" ngModel> -->
     </div>
 
     <button type="submit" class="btn btn-success" (click)="addMovieToDB()">Submit</button>

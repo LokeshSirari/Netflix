@@ -8,6 +8,7 @@ var PasswordAlgo = require('../PasswordAlgo/passwordalgo');
 var JsonResponse = require('../JsonResponse/jsonResponse');
 var Promise = require("bluebird");
 var md5 = require('md5');
+var fs = require('fs');
 var nodemailer = require('nodemailer');
 var base64Img = require('base64-img');
 var jwt = require('jsonwebtoken');
@@ -24,11 +25,11 @@ exports.updateUser = function (req, res) {
     console.log(status);
     User.findOne({ status: status }, function (err, user) {
         if (err) {
-            JsonResponse.jsonSuccessFalseResponse(err,res);
+            JsonResponse.jsonSuccessFalseResponse(err, res);
             //res.json(err);
         }
         else if (user == null) {
-            JsonResponse.jsonSuccessFalseResponse(user,res);
+            JsonResponse.jsonSuccessFalseResponse(user, res);
             // res.json(
             //     {
             //         success: false
@@ -45,7 +46,7 @@ exports.updateUser = function (req, res) {
                     res.json(err);
                 }
 
-                JsonResponse.jsonSuccessTrueResponse(response,res);
+                JsonResponse.jsonSuccessTrueResponse(response, res);
                 // res.json({
                 //     success: true,
                 //     body: response
@@ -58,7 +59,7 @@ exports.updateUser = function (req, res) {
 exports.getUser = function (req, res) {
     User.find({}, function (err, response) {
         if (err) {
-            JsonResponse.jsonSuccessFalseResponse(error,res);
+            JsonResponse.jsonSuccessFalseResponse(error, res);
         }
 
         res.json(response);
@@ -71,21 +72,21 @@ exports.postLogin = function (req, res) {
     User.findOne({ email: email, password: password }, function (error, response) {
         if (error) {
             //console.log(err)
-            JsonResponse.jsonSuccessFalseResponse(error,res);
+            JsonResponse.jsonSuccessFalseResponse(error, res);
             //res.json(error);
         }
         else if (response != null) {
             var token = jwt.sign({ email: response.email }, 'secretId');
-            var data={
-                token:token,
-                role:response.role
+            var data = {
+                token: token,
+                role: response.role
             };
-           JsonResponse.jsonSuccessTrueResponse(data,res);
-       
+            JsonResponse.jsonSuccessTrueResponse(data, res);
+
         }
         else {
-          
-            JsonResponse.jsonSuccessFalseResponse(response,res);
+
+            JsonResponse.jsonSuccessFalseResponse(response, res);
         }
 
     });
@@ -114,7 +115,7 @@ exports.postUser = function (req, res) {
             //     success: false,
             //     error: err
             // });
-            JsonResponse.jsonSuccessFalseResponse(err,res);
+            JsonResponse.jsonSuccessFalseResponse(err, res);
         }
         else {
             //put this in else if you dont want to send email to admin
@@ -138,7 +139,7 @@ exports.postUser = function (req, res) {
             //     success: true,
             //     body: response
             // })
-            JsonResponse.jsonSuccessTrueResponse(response,res);
+            JsonResponse.jsonSuccessTrueResponse(response, res);
         }
     })
 }
@@ -150,28 +151,30 @@ exports.postMovies = function (req, res) {
 
 
     });
-    // movies.image = base64Img.base64Sync(movies.image);
+    var image = Buffer.from(movies.image, 'base64');
+    var extension = req.body.extension;
+    fs.writeFile("/home/user/Music/Netflix/server/image/"+movies.name+"."+extension, image, function(err) {}); 
     movies.save(function (error, response) {
         if (error) {
             // res.json({
             //     "success": false,
             //     "error": error
             // })
-            JsonResponse.jsonSuccessFalseResponse(error,res);
+            JsonResponse.jsonSuccessFalseResponse(error, res);
         }
         else {
             // res.json({
             //     "success": true,
             //     "body": response
             // })
-            JsonResponse.jsonSuccessTrueResponse(response,res);
+            JsonResponse.jsonSuccessTrueResponse(response, res);
         }
     });
 }
 exports.getMovies = function (req, res) {
     Movies.find({}, function (err, response) {
         if (err) {
-            JsonResponse.jsonSuccessFalseResponse(error,res);
+            JsonResponse.jsonSuccessFalseResponse(error, res);
         }
 
         // if(response.length!=0){
@@ -180,7 +183,12 @@ exports.getMovies = function (req, res) {
         // response.image = base64Img.imgSync('data:image/jpg;base64,...', '', response.name)
         // console.log(response.image);
         // }
-        res.json(response);
+        //if(response.image.length()>10)
+       // base64_decode(response.image, 'copy.jpg');
+       //if(response.image.length>10)
+       //console.log(response.image);
+       
+       res.json(response);
     })
 }
 exports.updateMovies = function (req, res) {
@@ -195,12 +203,12 @@ exports.updateMovies = function (req, res) {
 
             movies.save(function (err, response) {
                 if (err) {
-                   // res.json(err);
-                   JsonResponse.jsonSuccessFalseResponse(err,res);
+                    // res.json(err);
+                    JsonResponse.jsonSuccessFalseResponse(err, res);
                 }
 
                 //res.json(response);
-                JsonResponse.jsonSuccessTrueResponse(response,res);
+                JsonResponse.jsonSuccessTrueResponse(response, res);
             });
         }
         else {
@@ -212,18 +220,18 @@ exports.deleteMovies = function (req, res) {
     var name = req.params.name;
     Movies.findOne({ name: name }, function (err, movies) {
         if (err) {
-            JsonResponse.jsonSuccessFalseResponse(err,res);
+            JsonResponse.jsonSuccessFalseResponse(err, res);
         }
 
         if (movies) {
             Movies.remove({ name: name }, function (err) {
                 if (err) {
-                    JsonResponse.jsonSuccessFalseResponse(err,res);
+                    JsonResponse.jsonSuccessFalseResponse(err, res);
                 }
-                JsonResponse.jsonSuccessTrueResponse(movies,res);
+                JsonResponse.jsonSuccessTrueResponse(movies, res);
             })
         } else {
-            JsonResponse.jsonSuccessFalseResponse(movies,res);
+            JsonResponse.jsonSuccessFalseResponse(movies, res);
         }
 
     })
@@ -233,7 +241,7 @@ exports.searchMovies = function (req, res) {
     Movies.find({ name: name }, function (err, movies) {
         if (err) {
             //res.json(err);
-            JsonResponse.jsonSuccessFalseResponse(err,res);
+            JsonResponse.jsonSuccessFalseResponse(err, res);
         }
         if (movies) {
             res.json(movies);
@@ -265,7 +273,7 @@ exports.newSeriesAdd = function (req, res) {
     });
     series.save(function (error, response) {
         if (error) {
-            JsonResponse.jsonSuccessFalseResponse(error,res);
+            JsonResponse.jsonSuccessFalseResponse(error, res);
 
         }
         else {
@@ -276,7 +284,7 @@ exports.newSeriesAdd = function (req, res) {
             });
             seasons.save(function (error1, response1) {
                 if (error1) {
-                    JsonResponse.jsonSuccessFalseResponse(error1,res);
+                    JsonResponse.jsonSuccessFalseResponse(error1, res);
 
                 }
                 else {
@@ -289,11 +297,11 @@ exports.newSeriesAdd = function (req, res) {
                     });
                     episodes.save(function (error2, response2) {
                         if (error2) {
-                            JsonResponse.jsonSuccessFalseResponse(error2,res);
+                            JsonResponse.jsonSuccessFalseResponse(error2, res);
 
                         }
                         else {
-                            JsonResponse.jsonSuccessTrueResponse(response1,res);
+                            JsonResponse.jsonSuccessTrueResponse(response1, res);
                         }
                     });
                 }
@@ -310,22 +318,22 @@ exports.seasonAdd = function (req, res) {
     });
     Season.findOne({ season_name: seasons.season_name, series_id: seasons.series_id }, function (err, response) {
         if (err) {
-            JsonResponse.jsonSuccessFalseResponse(err,res);
+            JsonResponse.jsonSuccessFalseResponse(err, res);
         }
         else if (response == null) {
             season.save(function (error, response1) {
                 if (error) {
-                    JsonResponse.jsonSuccessFalseResponse(error,res);
+                    JsonResponse.jsonSuccessFalseResponse(error, res);
 
                 }
                 else {
-                    JsonResponse.jsonSuccessTrueResponse(response1,res);
+                    JsonResponse.jsonSuccessTrueResponse(response1, res);
                 }
             });
 
         }
         else {
-            JsonResponse.jsonSuccessFalseResponse("season already exists",res)
+            JsonResponse.jsonSuccessFalseResponse("season already exists", res)
         }
 
     });
@@ -341,22 +349,22 @@ exports.episodesAdd = function (req, res) {
     });
     Episodes.findOne({ season_name: episodes.season_name, series_id: episodes.series_id, episode_name: episodes.episode_name }, function (err, response) {
         if (err) {
-            JsonResponse.jsonSuccessFalseResponse(err,res);
+            JsonResponse.jsonSuccessFalseResponse(err, res);
         }
         else if (response == null) {
             episodes.save(function (error, response1) {
                 if (error) {
-                    JsonResponse.jsonSuccessFalseResponse(error,res);
+                    JsonResponse.jsonSuccessFalseResponse(error, res);
 
                 }
                 else {
-                    JsonResponse.jsonSuccessTrueResponse(response1,res);
+                    JsonResponse.jsonSuccessTrueResponse(response1, res);
                 }
             });
 
         }
         else {
-            JsonResponse.jsonSuccessFalseResponse("Episode Already Exist",res);
+            JsonResponse.jsonSuccessFalseResponse("Episode Already Exist", res);
         }
 
     });
@@ -366,16 +374,16 @@ exports.episodesAdd = function (req, res) {
 exports.getSeries = function (req, res) {
     Series.find({}, function (err, response) {
         if (err) {
-            JsonResponse.jsonSuccessFalseResponse(err,res);
+            JsonResponse.jsonSuccessFalseResponse(err, res);
         }
         res.json(response);
     })
 }
 exports.getSeason = function (req, res) {
     var series_id = req.params.season;
-    Seasons.find({series_id:series_id}, function (err, response) {
+    Seasons.find({ series_id: series_id }, function (err, response) {
         if (err) {
-            JsonResponse.jsonSuccessFalseResponse(err,res);
+            JsonResponse.jsonSuccessFalseResponse(err, res);
         }
         res.json(response);
     })
@@ -383,9 +391,9 @@ exports.getSeason = function (req, res) {
 exports.getEpisode = function (req, res) {
     var series_id = req.body.series_id;
     var season_name = req.params.season_name;
-    Episodes.find({series_id:series_id,season_name:season_name}, function (err, response) {
+    Episodes.find({ series_id: series_id, season_name: season_name }, function (err, response) {
         if (err) {
-            JsonResponse.jsonSuccessFalseResponse(err,res);
+            JsonResponse.jsonSuccessFalseResponse(err, res);
         }
         res.json(response);
     })
