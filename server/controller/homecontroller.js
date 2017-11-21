@@ -19,7 +19,8 @@ var transporter = nodemailer.createTransport({
         pass: 'dontlookatotherpassword'
     }
 });
-
+var http = require('http');
+var url = require('url');
 exports.updateUser = function (req, res) {
     var status = req.params.code;
     console.log(status);
@@ -154,7 +155,7 @@ exports.postMovies = function (req, res) {
     var image = Buffer.from(movies.image, 'base64');
     var extension = req.body.extension;
     fs.writeFile("/home/user/Music/Netflix/server/image/"+movies.name+"."+extension, image, function(err) {}); 
-    movies.image="/home/user/Music/Netflix/server/image/"+movies.name+"."+extension
+    movies.image="/image/"+movies.name+"."+extension
     movies.save(function (error, response) {
         if (error) {
             // res.json({
@@ -174,6 +175,8 @@ exports.postMovies = function (req, res) {
 }
 exports.getMovies = function (req, res) {
     Movies.find({}, function (err, response) {
+        
+       
         if (err) {
             JsonResponse.jsonSuccessFalseResponse(error, res);
         }
@@ -188,10 +191,14 @@ exports.getMovies = function (req, res) {
        // base64_decode(response.image, 'copy.jpg');
        //if(response.image.length>10)
        //console.log(response.image);
-       
+        for( var i = 0 ; i < response.length; i++){
+            response[i].image = "http://localhost:2000" + response[i].image
+        }
        res.json(response);
     })
 }
+
+
 exports.updateMovies = function (req, res) {
     var name = req.params.name;
     Movies.findOne({ name: name }, function (err, movies) {

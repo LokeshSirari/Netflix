@@ -24,6 +24,7 @@ router.route('/user')
  .put(homeController.updateMovies)
  .delete(homeController.deleteMovies)
  .get(homeController.searchMovies);
+
  router.route('/movies/catagery/:catagery')
  .get(homeController.searchMoviesByCatagery);
 
@@ -36,7 +37,6 @@ router.route('/series/season/:season')
 
 router.route('/series/season/episode/:episode')
 .get(homeController.getEpisode)
- 
 
 
 module.exports = router;
