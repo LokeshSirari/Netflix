@@ -154,6 +154,7 @@ exports.postMovies = function (req, res) {
     var image = Buffer.from(movies.image, 'base64');
     var extension = req.body.extension;
     fs.writeFile("/home/user/Music/Netflix/server/image/"+movies.name+"."+extension, image, function(err) {}); 
+    movies.image="/home/user/Music/Netflix/server/image/"+movies.name+"."+extension
     movies.save(function (error, response) {
         if (error) {
             // res.json({

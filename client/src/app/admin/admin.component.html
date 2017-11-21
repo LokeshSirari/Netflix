@@ -61,7 +61,8 @@
 
 <!--For showing selected movie image and updating -->
 <div *ngIf="showMovieImageFlag==1">
-  <img src={{select.image}}>
+  <img src="{{select.image}}">dsaf
+  <h3>{{select.image}}</h3>
   <h3>{{select.name}}</h3>
   <h4>Catagery:{{select.catagery}}</h4>
   <button type="button" class="btn btn-primary" (click)="updateMoviesFlag()">Update Movie Name</button>
